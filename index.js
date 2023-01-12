@@ -11,6 +11,9 @@ var app = express();
 var cors = require('cors');
 app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -23,6 +26,18 @@ app.get('/', function (req, res) {
 app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
 });
+
+app.get('/api/whoami', (req, res) => {
+  const ip = req.ip;
+  const lang = req.headers['accept-language'];
+  const software = req.headers['user-agent'];
+  console.log(ip);
+  res.json({
+    "ipaddress": ip,
+    "language": lang,
+    "software": software
+  });
+})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT || 3000, function () {
